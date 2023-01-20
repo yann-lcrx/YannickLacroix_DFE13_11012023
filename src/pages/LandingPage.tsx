@@ -5,7 +5,6 @@ import Header from "../components/Header";
 function LandingPage({}) {
   return (
     <>
-      <Header />
       <main>
         <div className="hero">
           <section className="hero-content">
@@ -55,7 +54,6 @@ function LandingPage({}) {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }
