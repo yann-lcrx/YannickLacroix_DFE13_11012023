@@ -1,17 +1,12 @@
-import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { logout } from "../features/user";
 
 function Header() {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const token = useSelector((state) => state.user.jwt);
-  const firstName = useSelector((state) => state.user.firstName);
-
-  const isLoggedInWithToken = useMemo(
-    () => isLoggedIn && token,
-    [isLoggedIn, token]
+  const isLoggedInWithToken = useSelector(
+    (state) => state.user.isLoggedIn && !!state.user.jwt
   );
+  const firstName = useSelector((state) => state.user.firstName);
 
   const dispatch = useDispatch();
 

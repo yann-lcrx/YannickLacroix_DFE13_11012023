@@ -1,12 +1,31 @@
-import { useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfile } from "../features/user";
+import { getProfile, updateName } from "../features/user";
 
 function Profile() {
+  const [isEditMode, setEditMode] = useState(false);
+
   const dispatch = useDispatch();
-  const username = useSelector(
-    (state) => `${state.user.firstName} ${state.user.lastName}`
+
+  const firstName = useSelector((state) => state.user.firstName);
+  const lastName = useSelector((state) => state.user.lastName);
+  const username = useMemo(
+    () => `${firstName} ${lastName}`,
+    [firstName, lastName]
   );
+
+  const handleChangeName = (event) => {
+    event.preventDefault();
+
+    dispatch(
+      updateName(
+        event.target.elements.firstName.value,
+        event.target.elements.lastName.value
+      )
+    );
+
+    setEditMode(false);
+  };
 
   useEffect(() => {
     dispatch(getProfile());
@@ -18,10 +37,45 @@ function Profile() {
         <div className="header">
           <h1>
             Welcome back
-            <br />
-            {username}
+            {!isEditMode && (
+              <>
+                <br />
+                {username}
+              </>
+            )}
           </h1>
-          <button className="edit-button">Edit Name</button>
+          {isEditMode ? (
+            <>
+              <form onSubmit={(e) => handleChangeName(e)}>
+                <div>
+                  <input
+                    required
+                    min={2}
+                    placeholder={firstName}
+                    name="firstName"
+                    aria-label="first name"
+                  />
+                  <input
+                    required
+                    min={2}
+                    placeholder={lastName}
+                    name="lastName"
+                    aria-label="last name"
+                  />
+                </div>
+                <div>
+                  <button type="submit">Save</button>
+                  <button type="button" onClick={() => setEditMode(false)}>
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <button className="edit-button" onClick={() => setEditMode(true)}>
+              Edit Name
+            </button>
+          )}
         </div>
         <h2 className="sr-only">Accounts</h2>
         <section className="account">

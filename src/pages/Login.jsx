@@ -5,8 +5,8 @@ import { login } from "../features/user";
 function Login() {
   const dispatch = useDispatch();
 
-  const submitForm = async (event) => {
-    event?.preventDefault();
+  const submitForm = (event) => {
+    event.preventDefault();
 
     dispatch(
       login(
