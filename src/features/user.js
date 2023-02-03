@@ -4,12 +4,13 @@ import { createAction, createReducer } from "@reduxjs/toolkit";
 //   payload: { jwt, firstName, lastName },
 // }));
 export const userloading = createAction("user/loading");
-export const loginResolved = createAction("login/resolved", (jwt) => ({
+export const loginResolved = createAction("user/login/resolved", (jwt) => ({
   payload: { jwt },
 }));
-export const userRejected = createAction("user/rejected", (error) => ({
+export const userRejected = createAction("user/login/rejected", (error) => ({
   payload: { error },
 }));
+export const logout = createAction("user/logout");
 
 export const login = (email, password) => {
   return async (dispatch, getState) => {
@@ -48,9 +49,15 @@ const initialState = {
 };
 
 export default createReducer(initialState, (builder) =>
-  builder.addCase(loginResolved, (draft, action) => {
-    draft.jwt = action.payload.jwt;
-    draft.isLoggedIn = true;
-    return;
-  })
+  builder
+    .addCase(loginResolved, (draft, action) => {
+      draft.jwt = action.payload.jwt;
+      draft.isLoggedIn = true;
+      return;
+    })
+    .addCase(logout, (draft) => {
+      draft.jwt = "";
+      draft.isLoggedIn = false;
+      return;
+    })
 );
