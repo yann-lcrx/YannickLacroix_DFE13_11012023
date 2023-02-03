@@ -8,21 +8,18 @@ function AppRouter() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const token = useSelector((state) => state.user.jwt);
 
+  const isLoggedInWithToken = isLoggedIn && token;
+
   return (
     <Routes>
-      {isLoggedIn && token ? (
-        <>
-          <Route path="/" element={<Navigate to="/profile" />} replace />
-          <Route path="/login" element={<Navigate to="/profile" />} replace />
-        </>
-      ) : (
-        <>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-        </>
-      )}
-
-      <Route path="/profile" element={<Profile />} />
+      <Route
+        path="/"
+        element={isLoggedInWithToken ? <Profile /> : <LandingPage />}
+      />
+      <Route
+        path="/login"
+        element={isLoggedInWithToken ? <Navigate to="/" /> : <Login />}
+      />
     </Routes>
   );
 }
