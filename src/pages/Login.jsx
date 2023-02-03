@@ -1,34 +1,22 @@
-import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector, useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { login } from "../features/user";
 
 function Login() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
 
   const submitForm = async (event) => {
-    console.log("ça part");
     event?.preventDefault();
 
-    const reqBody = JSON.stringify({
-      email: event.target.elements.username.value,
-      password: event.target.elements.password.value,
-    });
-
-    // console.log(reqBody);
-
-    const res = await fetch(
-      `${import.meta.env.VITE_API_BASE_PATH}/user/login`,
-      {
-        method: "POST",
-        body: reqBody,
-        headers: {
-          Accept: "*/*",
-          "Content-Type": "application/json; charset=utf-8",
-        },
-      }
+    dispatch(
+      login(
+        event.target.elements.username.value,
+        event.target.elements.password.value
+      )
     );
-    if (res.ok) {
-      navigate("/profile");
-    }
   };
 
   return (
