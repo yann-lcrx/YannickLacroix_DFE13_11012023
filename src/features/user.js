@@ -1,16 +1,29 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
-// export const login = createAction("user/login", (jwt, firstName, lastName) => ({
-//   payload: { jwt, firstName, lastName },
-// }));
-export const userloading = createAction("user/loading");
+// export const userloading = createAction("user/loading");
 export const loginResolved = createAction("user/login/resolved", (jwt) => ({
   payload: { jwt },
 }));
-export const userRejected = createAction("user/login/rejected", (error) => ({
+
+export const loginRejected = createAction("user/login/rejected", (error) => ({
   payload: { error },
 }));
+
 export const logout = createAction("user/logout");
+
+export const profileResolved = createAction(
+  "user/profile/resolved",
+  (firstName, lastName) => ({
+    payload: { firstName, lastName },
+  })
+);
+
+export const profileRejected = createAction(
+  "user/profile/rejected",
+  (error) => ({
+    payload: { error },
+  })
+);
 
 export const login = (email, password) => {
   return async (dispatch, getState) => {
@@ -34,9 +47,34 @@ export const login = (email, password) => {
 
       const data = await res.json();
       dispatch(loginResolved(data.body.token));
-      console.log("c'est bon");
     } catch (error) {
-      dispatch(userRejected(error));
+      dispatch(loginRejected(error));
+    }
+  };
+};
+
+export const getProfile = () => {
+  return async (dispatch, getState) => {
+    const state = getState();
+    console.log(state);
+
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_API_BASE_PATH}/user/profile`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "*/*",
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: `Bearer ${state.user.jwt}`,
+          },
+        }
+      );
+
+      const data = await res.json();
+      dispatch(profileResolved(data.body.firstName, data.body.lastName));
+    } catch (error) {
+      dispatch(profileRejected(error));
     }
   };
 };
@@ -59,5 +97,9 @@ export default createReducer(initialState, (builder) =>
       draft.jwt = "";
       draft.isLoggedIn = false;
       return;
+    })
+    .addCase(profileResolved, (draft, action) => {
+      draft.firstName = action.payload.firstName;
+      draft.lastName = action.payload.lastName;
     })
 );

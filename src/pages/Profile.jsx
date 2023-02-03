@@ -1,6 +1,17 @@
-import React from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getProfile } from "../features/user";
 
 function Profile() {
+  const dispatch = useDispatch();
+  const username = useSelector(
+    (state) => `${state.user.firstName} ${state.user.lastName}`
+  );
+
+  useEffect(() => {
+    dispatch(getProfile());
+  }, []);
+
   return (
     <>
       <main className="main bg-dark">
@@ -8,7 +19,7 @@ function Profile() {
           <h1>
             Welcome back
             <br />
-            Tony Jarvis!
+            {username}
           </h1>
           <button className="edit-button">Edit Name</button>
         </div>

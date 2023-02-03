@@ -6,6 +6,7 @@ import { logout } from "../features/user";
 function Header() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const token = useSelector((state) => state.user.jwt);
+  const firstName = useSelector((state) => state.user.firstName);
 
   const isLoggedInWithToken = useMemo(
     () => isLoggedIn && token,
@@ -34,7 +35,7 @@ function Header() {
           <>
             <Link className="main-nav-item" to="/">
               <i className="fa fa-user-circle"></i>
-              Tony
+              {firstName}
             </Link>
             <button className="main-nav-item" onClick={handleLogout}>
               <i className="fa fa-sign-out"></i>

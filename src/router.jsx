@@ -14,11 +14,17 @@ function AppRouter() {
     <Routes>
       <Route
         path="/"
-        element={isLoggedInWithToken ? <Profile /> : <LandingPage />}
+        element={
+          isLoggedInWithToken ? <Navigate to="/profile" /> : <LandingPage />
+        }
       />
       <Route
         path="/login"
-        element={isLoggedInWithToken ? <Navigate to="/" /> : <Login />}
+        element={isLoggedInWithToken ? <Navigate to="/profile" /> : <Login />}
+      />
+      <Route
+        path="/profile"
+        element={isLoggedInWithToken ? <Profile /> : <Navigate to="/" />}
       />
     </Routes>
   );
