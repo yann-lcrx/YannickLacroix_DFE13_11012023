@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { logout } from "../features/user";
+import { logout } from "../features/auth";
 
 function Header() {
   const isLoggedInWithToken = useSelector(
-    (state) => state.user.isLoggedIn && !!state.user.jwt
+    (state) => state.auth.isLoggedIn && !!state.auth.jwt
   );
   const firstName = useSelector((state) => state.user.firstName);
 

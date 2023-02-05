@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { login } from "../features/user";
+import { useDispatch } from "react-redux";
+import { login } from "../features/auth";
 
 function Login() {
   const dispatch = useDispatch();

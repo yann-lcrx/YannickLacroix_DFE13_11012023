@@ -5,8 +5,8 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 
 function AppRouter() {
-  const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
-  const token = useSelector((state) => state.user.jwt);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const token = useSelector((state) => state.auth.jwt);
 
   const isLoggedInWithToken = isLoggedIn && token;
 

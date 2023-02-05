@@ -1,15 +1,5 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
-export const loginResolved = createAction("user/login/resolved", (jwt) => ({
-  payload: { jwt },
-}));
-
-export const loginRejected = createAction("user/login/rejected", (error) => ({
-  payload: { error },
-}));
-
-export const logout = createAction("user/logout");
-
 export const profileResolved = createAction(
   "user/profile/resolved",
   (firstName, lastName) => ({
@@ -38,34 +28,6 @@ export const nameChangeRejected = createAction(
   })
 );
 
-export const login = (email, password) => {
-  return async (dispatch, getState) => {
-    const reqBody = JSON.stringify({
-      email,
-      password,
-    });
-
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_API_BASE_PATH}/user/login`,
-        {
-          method: "POST",
-          body: reqBody,
-          headers: {
-            Accept: "*/*",
-            "Content-Type": "application/json; charset=utf-8",
-          },
-        }
-      );
-
-      const data = await res.json();
-      dispatch(loginResolved(data.body.token));
-    } catch (error) {
-      dispatch(loginRejected(error));
-    }
-  };
-};
-
 export const getProfile = () => {
   return async (dispatch, getState) => {
     const state = getState();
@@ -78,7 +40,7 @@ export const getProfile = () => {
           headers: {
             Accept: "*/*",
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Bearer ${state.user.jwt}`,
+            Authorization: `Bearer ${state.auth.jwt}`,
           },
         }
       );
@@ -109,7 +71,7 @@ export const updateName = (firstName, lastName) => {
           headers: {
             Accept: "*/*",
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: `Bearer ${state.user.jwt}`,
+            Authorization: `Bearer ${state.auth.jwt}`,
           },
         }
       );
@@ -123,24 +85,12 @@ export const updateName = (firstName, lastName) => {
 };
 
 const initialState = {
-  jwt: "",
   firstName: "",
   lastName: "",
-  isLoggedIn: false,
 };
 
 export default createReducer(initialState, (builder) =>
   builder
-    .addCase(loginResolved, (draft, action) => {
-      draft.jwt = action.payload.jwt;
-      draft.isLoggedIn = true;
-      return;
-    })
-    .addCase(logout, (draft) => {
-      draft.jwt = "";
-      draft.isLoggedIn = false;
-      return;
-    })
     .addCase(profileResolved, (draft, action) => {
       draft.firstName = action.payload.firstName;
       draft.lastName = action.payload.lastName;
