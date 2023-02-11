@@ -46,14 +46,15 @@ function Profile() {
           </h1>
           {isEditMode ? (
             <>
-              <form onSubmit={(e) => handleChangeName(e)}>
-                <div>
+              <form onSubmit={(e) => handleChangeName(e)} className="edit-form">
+                <div className="edit-section">
                   <input
                     required
                     min={2}
                     placeholder={firstName}
                     name="firstName"
                     aria-label="first name"
+                    className="edit-field"
                   />
                   <input
                     required
@@ -61,11 +62,18 @@ function Profile() {
                     placeholder={lastName}
                     name="lastName"
                     aria-label="last name"
+                    className="edit-field"
                   />
                 </div>
-                <div>
-                  <button type="submit">Save</button>
-                  <button type="button" onClick={() => setEditMode(false)}>
+                <div className="edit-section">
+                  <button type="submit" className="edit-button">
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="edit-button"
+                    onClick={() => setEditMode(false)}
+                  >
                     Cancel
                   </button>
                 </div>
