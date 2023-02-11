@@ -11,7 +11,7 @@ export const loginRejected = createAction("auth/rejected", (error) => ({
 export const logout = createAction("auth/logout");
 
 export const login = (email, password) => {
-  return async (dispatch, getState) => {
+  return async (dispatch) => {
     const reqBody = JSON.stringify({
       email,
       password,
@@ -41,6 +41,7 @@ export const login = (email, password) => {
 const initialState = {
   jwt: "",
   isLoggedIn: false,
+  error: "",
 };
 
 export default createReducer(initialState, (builder) =>
@@ -48,11 +49,12 @@ export default createReducer(initialState, (builder) =>
     .addCase(loginResolved, (draft, action) => {
       draft.jwt = action.payload.jwt;
       draft.isLoggedIn = true;
-      return;
+    })
+    .addCase(loginRejected, (draft, action) => {
+      console.log(action.payload.error);
     })
     .addCase(logout, (draft) => {
       draft.jwt = "";
       draft.isLoggedIn = false;
-      return;
     })
 );
