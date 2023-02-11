@@ -1,17 +1,21 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
+export const loginLoading = createAction("auth/loading");
+
 export const loginResolved = createAction("auth/resolved", (jwt) => ({
   payload: { jwt },
 }));
 
-export const loginRejected = createAction("auth/rejected", (error) => ({
-  payload: { error },
+export const loginRejected = createAction("auth/rejected", (status, error) => ({
+  payload: { status, error },
 }));
 
 export const logout = createAction("auth/logout");
 
 export const login = (email, password) => {
   return async (dispatch) => {
+    dispatch(loginLoading());
+
     const reqBody = JSON.stringify({
       email,
       password,
@@ -31,9 +35,14 @@ export const login = (email, password) => {
       );
 
       const data = await res.json();
-      dispatch(loginResolved(data.body.token));
+
+      if (res.ok) {
+        dispatch(loginResolved(data.body.token));
+      } else {
+        dispatch(loginRejected(data.status, data.message));
+      }
     } catch (error) {
-      dispatch(loginRejected(error));
+      dispatch(loginRejected(500, error));
     }
   };
 };
@@ -46,12 +55,15 @@ const initialState = {
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(loginLoading, (draft) => {
+      draft.error = "";
+    })
     .addCase(loginResolved, (draft, action) => {
       draft.jwt = action.payload.jwt;
       draft.isLoggedIn = true;
     })
     .addCase(loginRejected, (draft, action) => {
-      console.log(action.payload.error);
+      draft.error = `Erreur ${action.payload.status}: ${action.payload.error}`;
     })
     .addCase(logout, (draft) => {
       draft.jwt = "";

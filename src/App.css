@@ -300,6 +300,10 @@ button.main-nav-item {
   color: #fff;
 }
 
+.error-text {
+  color: crimson;
+}
+
 @media (min-width: 720px) {
   .account {
     flex-direction: row;

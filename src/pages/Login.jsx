@@ -1,8 +1,10 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth";
 
 function Login() {
   const dispatch = useDispatch();
+
+  const authError = useSelector((state) => state.auth.error);
 
   const submitForm = (event) => {
     event.preventDefault();
@@ -30,6 +32,7 @@ function Login() {
               <label htmlFor="password">Password</label>
               <input type="password" id="password" name="password" required />
             </div>
+            {authError && <p className="error-text">{authError}</p>}
             <div className="input-remember">
               <input type="checkbox" id="remember-me" />
               <label htmlFor="remember-me">Remember me</label>
