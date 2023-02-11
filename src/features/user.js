@@ -1,5 +1,7 @@
 import { createAction, createReducer } from "@reduxjs/toolkit";
 
+export const profileLoading = createAction("user/profile/loading");
+
 export const profileResolved = createAction(
   "user/profile/resolved",
   (firstName, lastName) => ({
@@ -9,10 +11,12 @@ export const profileResolved = createAction(
 
 export const profileRejected = createAction(
   "user/profile/rejected",
-  (error) => ({
-    payload: { error },
+  (status, error) => ({
+    payload: { status, error },
   })
 );
+
+export const nameChangeLoading = createAction("user/name/loading");
 
 export const nameChangeResolved = createAction(
   "user/name/resolved",
@@ -22,14 +26,16 @@ export const nameChangeResolved = createAction(
 );
 
 export const nameChangeRejected = createAction(
-  "user/profile/rejected",
-  (error) => ({
-    payload: { error },
+  "user/name/rejected",
+  (status, error) => ({
+    payload: { status, error },
   })
 );
 
 export const getProfile = () => {
   return async (dispatch, getState) => {
+    dispatch(profileLoading());
+
     const state = getState();
 
     try {
@@ -46,15 +52,21 @@ export const getProfile = () => {
       );
 
       const data = await res.json();
-      dispatch(profileResolved(data.body.firstName, data.body.lastName));
+      if (res.ok) {
+        dispatch(profileResolved(data.body.firstName, data.body.lastName));
+      } else {
+        dispatch(profileRejected(data.status, data.error));
+      }
     } catch (error) {
-      dispatch(profileRejected(error));
+      dispatch(profileRejected(500, error));
     }
   };
 };
 
 export const updateName = (firstName, lastName) => {
   return async (dispatch, getState) => {
+    dispatch(nameChangeLoading());
+
     const state = getState();
 
     const reqBody = JSON.stringify({
@@ -77,9 +89,14 @@ export const updateName = (firstName, lastName) => {
       );
 
       const data = await res.json();
-      dispatch(nameChangeResolved(data.body.firstName, data.body.lastName));
+
+      if (res.ok) {
+        dispatch(nameChangeResolved(data.body.firstName, data.body.lastName));
+      } else {
+        dispatch(nameChangeRejected(data.status, data.message));
+      }
     } catch (error) {
-      dispatch(nameChangeRejected(error));
+      dispatch(nameChangeRejected(500, error));
     }
   };
 };
@@ -87,18 +104,37 @@ export const updateName = (firstName, lastName) => {
 const initialState = {
   firstName: "",
   lastName: "",
+  profileError: "",
+  nameChangeError: "",
 };
 
 export default createReducer(initialState, (builder) =>
   builder
+    .addCase(profileLoading, (draft) => {
+      draft.profileError = "";
+      draft.nameChangeError = "";
+      return;
+    })
     .addCase(profileResolved, (draft, action) => {
       draft.firstName = action.payload.firstName;
       draft.lastName = action.payload.lastName;
       return;
     })
+    .addCase(profileRejected, (draft, action) => {
+      draft.profileError = `Erreur ${action.payload.status} lors de la récupération de l'utilisateur: ${action.payload.error}. Veuillez réessayer.`;
+      return;
+    })
+    .addCase(nameChangeLoading, (draft) => {
+      draft.nameChangeError = "";
+      return;
+    })
     .addCase(nameChangeResolved, (draft, action) => {
       draft.firstName = action.payload.firstName;
       draft.lastName = action.payload.lastName;
+      return;
+    })
+    .addCase(nameChangeRejected, (draft, action) => {
+      draft.nameChangeError = `Erreur ${action.payload.status} lors de la modification de l'utilisateur: ${action.payload.error}. Veuillez réessayer.`;
       return;
     })
 );

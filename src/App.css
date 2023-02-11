@@ -271,6 +271,11 @@ button.main-nav-item {
   height: 32px;
 }
 
+.edit-button-cancel {
+  color: #00bc77;
+  background-color: #fff;
+}
+
 .edit-field {
   padding: 8px;
   border-radius: 3px;

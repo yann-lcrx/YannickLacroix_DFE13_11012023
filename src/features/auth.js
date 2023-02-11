@@ -57,16 +57,20 @@ export default createReducer(initialState, (builder) =>
   builder
     .addCase(loginLoading, (draft) => {
       draft.error = "";
+      return;
     })
     .addCase(loginResolved, (draft, action) => {
       draft.jwt = action.payload.jwt;
       draft.isLoggedIn = true;
+      return;
     })
     .addCase(loginRejected, (draft, action) => {
       draft.error = `Erreur ${action.payload.status}: ${action.payload.error}`;
+      return;
     })
     .addCase(logout, (draft) => {
       draft.jwt = "";
       draft.isLoggedIn = false;
+      return;
     })
 );
