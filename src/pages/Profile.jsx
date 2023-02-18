@@ -48,7 +48,7 @@ function Profile() {
                 {!isEditMode && (
                   <>
                     <br />
-                    {username}
+                    {username}!
                   </>
                 )}
               </h1>
@@ -77,12 +77,15 @@ function Profile() {
                       />
                     </div>
                     <div className="edit-section">
-                      <button type="submit" className="edit-button">
+                      <button
+                        type="submit"
+                        className="edit-button edit-button-control"
+                      >
                         Save
                       </button>
                       <button
                         type="button"
-                        className="edit-button edit-button-cancel"
+                        className="edit-button edit-button-control edit-button-cancel"
                         onClick={() => setEditMode(false)}
                       >
                         Cancel
