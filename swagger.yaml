@@ -4,7 +4,6 @@ info:
   description: Contains all available API endpoints in this codebase
   version: "1.0.0"
   termsOfService: "http://swagger.io/terms/"
-host: localhost:3001
 basePath: /api/v1
 schemes:
   - http
@@ -151,6 +150,7 @@ paths:
         - in: body
           name: body
           description: Transaction data
+          required: true
           schema:
             $ref: "#/definitions/Transaction"
       produces:
@@ -214,6 +214,7 @@ paths:
           type: string
         - in: body
           name: body
+          required: true
           description: Transaction data
           schema:
             $ref: "#/definitions/Transaction"
