@@ -295,6 +295,14 @@ button.main-nav-item {
   display: flex;
   gap: 16px;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (min-width: 920px) {
+  .edit-section {
+    flex-direction: row;
+  }
 }
 
 .header {
