@@ -115,14 +115,18 @@ paths:
     get:
       tags:
         - Transactions Module
-      summary: Get all transactions for current month
-      description: Get all transactions for current month
+      summary: Get all transactions
+      description: Get all transactions. Use the month query parameter to get transactions for a specific month.
       parameters:
         - in: header
           name: Authorization
           description: Attach Bearer JWT token
           required: true
           type: string
+        - in: query
+          name: month
+          description: Month to get transactions from (optional, format YYYYMM)
+          type: number
       produces:
         - application/json
       responses:
@@ -325,6 +329,12 @@ definitions:
         type: string
       amount:
         type: number
+      transactionType:
+        type: string
+      category:
+        type: string
+      notes:
+        type: string
   Transaction:
     type: object
     properties:
@@ -334,3 +344,9 @@ definitions:
         type: string
       amount:
         type: number
+      transactionType:
+        type: string
+      category:
+        type: string
+      notes:
+        type: string
